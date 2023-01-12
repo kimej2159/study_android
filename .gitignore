@@ -1,0 +1,17 @@
+# except folder
+.idea/
+contents/
+build/
+libs/
+settings
+
+
+# except files
+build
+.mp4
+.mov
+.zip
+.psd
+.ai
+.hwp
+.txt
