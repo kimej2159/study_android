@@ -36,4 +36,17 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // glide : url 상이나 drawable에 있는 이미지를 가져와서 보여준다
+    //메니패스트에 인터넷 권한 설정 해줘야 함
+    //<uses-permission android:name="android.permission.INTERNET"/>
+
+    /* Glide
+            .with(myFragment)       --> .with(this)로 대체할 수 있음 (Activity)
+            .load(url)
+            .centerCrop()
+            .placeholder(R.drawable.loading_spinner)
+            .into(myImageView);*/
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
 }

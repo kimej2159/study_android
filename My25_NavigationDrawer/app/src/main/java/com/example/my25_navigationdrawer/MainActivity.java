@@ -1,8 +1,10 @@
 package com.example.my25_navigationdrawer;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -12,8 +14,10 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -56,6 +60,45 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.contain, fragment1).commit();
 
+        //헤드 드로어에 접근해서 로그인 정보 표시하기
+        int userLevel = 0;      //0: 관리자, 1: 일반유저 -> DB에 있음
+        String loginID = "사장";     //관리자 ID:BlackPink, 일반유저 BTS
+
+        View headerView = nav_view.getHeaderView(0);
+        //헤드 드로어에 있는 TextView 2개
+        TextView navLoginID = headerView.findViewById(R.id.loginID);
+        navLoginID.setText("반갑습니다! " + loginID + "님");
+        //이미지뷰에 접근
+        ImageView loginImage = headerView.findViewById(R.id.loginImage);
+
+        Glide
+                .with(this)     //-> .with(myfragment)
+                //.load(R.drawable.eunji)
+                .load("https://cdn.pixabay.com/photo/2017/06/24/02/56/art-2436545__340.jpg")
+                .circleCrop()
+                .placeholder(R.mipmap.ic_launcher_round)
+                .into(loginImage);
+
+        // loginImage.setImageResource(R.drawable.eunji);
+
+        //userLevel이 0이면 관리자라서 아래메뉴까지 보여주고
+        //userLevel이 1이면 일반 유저로 아래 메뉴를 보여주지 않는다
+        if(userLevel == 0){
+            nav_view.getMenu().findItem(R.id.communi).setVisible(true);
+        }else if(userLevel == 1){
+            nav_view.getMenu().findItem(R.id.communi).setVisible(false);
+        }
+
+        //플로팅 버튼이 클릭되었을 때
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own code",
+                        Snackbar.LENGTH_LONG)
+                        .setAction("Action",null).show();
+            }
+        });
 
 
     }
@@ -66,56 +109,48 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         switch (id){
             case R.id.nav_home:
-                onFragmentSelected(0);
+                onFragmentSelected("첫번째 화면", fragment1);
                 break;
             case R.id.nav_gallery:
-                onFragmentSelected(1);
+                onFragmentSelected("두번째 화면", fragment2);
                 break;
             case R.id.nav_slideshow:
-                onFragmentSelected(2);
+                onFragmentSelected("세번째 화면", fragment3);
                 break;
             case R.id.nav_tools:
-                onFragmentSelected(3);
+                onFragmentSelected("네번째 화면", fragment1);
                 break;
             case R.id.nav_share:
-                onFragmentSelected(4);
+                onFragmentSelected("다섯번째 화면", fragment2);
                 break;
             case R.id.nav_send:
-                onFragmentSelected(5);
+                onFragmentSelected("여섯번째 화면", fragment3);
                 break;
         }
-        // 메뉴 선택 후 드로어가 사라지게 한다
+        // 메뉴 선택후 드로어가 사라지게 한다
         draw_layout.closeDrawer(GravityCompat.START);
 
         return true;
     }
-
-    private void onFragmentSelected(int position){
-        Log.d(TAG, "onFragmentSelected: " + position);
-        Fragment selFragment = null;
-
-        if(position == 0){
-            selFragment = fragment1;
-            toolbar.setTitle("첫번째 화면");
-        }else if(position == 1){
-            selFragment = fragment2;
-            toolbar.setTitle("두번째 화면");
-        }else if(position == 2){
-            selFragment = fragment3;
-            toolbar.setTitle("세번째 화면");
-        }else if(position == 3){
-            selFragment = fragment1;
-            toolbar.setTitle("네번째 화면");
-        }else if(position == 4){
-            selFragment = fragment2;
-            toolbar.setTitle("다섯번째 화면");
-        }else if(position == 5){
-            selFragment = fragment3;
-            toolbar.setTitle("여섯번째 화면");
-        }
+    //                                  화면 순서,  내가 선택한 프래그먼트
+    private void onFragmentSelected(String screen, Fragment selFragment){
+        // 타이틀 이름 바꿈
+        toolbar.setTitle(screen);
+        // 선택한 프래그먼트 화면으로 교체
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.contain, selFragment).commit();
     }
 
 
+    // 뒤로가기를 눌렀을 때 만약 드로우 창이 열려있으면 드로우 창을 닫고
+    // 드로우 창이 열려있지 않으면 원래의 역할을 한다(앱 종료)
+
+    @Override
+    public void onBackPressed() {
+        if(draw_layout.isDrawerOpen(GravityCompat.START)){
+            draw_layout.closeDrawer(GravityCompat.START);
+        }else {
+            super.onBackPressed();
+        }
+    }
 }
