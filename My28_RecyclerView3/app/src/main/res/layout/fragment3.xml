@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100">
+
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:src="@drawable/cat"
+        android:layout_weight="60"/>
+
+
+    <TextView
+        android:id="@+id/kind"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:text="묘종: 길고양이"
+        android:textSize="24sp"
+        android:layout_margin="10dp"/>
+    <TextView
+        android:id="@+id/age"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:text="나이: 2살"
+        android:textSize="24sp"
+        android:layout_margin="10dp"/>
+    <TextView
+        android:id="@+id/gender"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:text="성별: 암컷"
+        android:textSize="24sp"
+        android:layout_margin="10dp"/>
+    <TextView
+        android:id="@+id/adress"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:text="주소: 이골목이내현주소"
+        android:textSize="24sp"
+        android:layout_margin="10dp"/>
+
+</LinearLayout>
