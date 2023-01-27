@@ -1,30 +1,46 @@
 package com.example.my28_recyclerview3;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class Fragment1 extends Fragment {
     MainActivity activity;
     String sendData, receiveData;
 
+    TextView tv1;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
         //프래그먼트가 속한 액티비티 가져옴
         activity = (MainActivity) getActivity();
         //프래그먼트1에서 보낼 내가 만든 문자열
-
+        //프래그먼트 1에서 프래그먼트 2로 보낼 문자열
+        sendData = "data from fragment1";
 
 
         //프래그먼트3에서 받을 문자열 변수 초기화
         receiveData = "";
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment1 ,container , false);
+
+        tv1 = viewGroup.findViewById(R.id.textView1);
 
 
-
+        return viewGroup;
 
 }

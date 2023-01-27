@@ -8,8 +8,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +25,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "main: MainActivity";
@@ -82,6 +89,64 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //정상적으로 종료가 되었을 때
+        if(requestCode == reqPicCode && resultCode == RESULT_OK){
+            Toast.makeText(this, "사진이 잘 찍힘", Toast.LENGTH_SHORT).show();
+
+            setPic();
+        }
+
+    }
+    // 사진 저장처리를 하는 곳
+    private void setPic() {
+        // 사진의 크기 가져오기
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        // 사진의 해상도를 1/8로 지정
+        options.inSampleSize = 8;
+        // 비트맵 이미지를 생성
+        Bitmap bitmap = BitmapFactory.decodeFile(imgFilePath);
+        // 이미지를 갤러리에 저장
+        gelleryAddPic(bitmap);
+        // 이미지를 이미지뷰에 세팅
+        imageView.setImageBitmap(bitmap);
+
+    }
+
+    private void gelleryAddPic(Bitmap bitmap) {
+        FileOutputStream fos;
+
+        //쓰기객체
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){ //API 29
+            ContentResolver resolver = getContentResolver();
+
+            //맵구조를 가진 ContentValues: 파일 정보를 저장함
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME,
+                    "Image_jpg");
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE,
+                    "image/jpeg");
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH,
+                    Environment.DIRECTORY_PICTURES + File.separator + "MyFolder");
+
+            Uri imageUri = resolver.insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    contentValues
+            );
+
+            try {
+                fos = (FileOutputStream) resolver.openOutputStream(Objects.requireNonNull(imageUri));
+
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                Objects.requireNonNull(fos);
+
+                Toast.makeText(this, "fos 작업됨", Toast.LENGTH_SHORT).show();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+        }
 
     }
 
